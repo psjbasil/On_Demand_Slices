@@ -1,0 +1,22 @@
+/* static/css/style.css */
+body {
+    font-family: Arial, sans-serif;
+}
+
+#network-topology {
+    width: 100%;
+    height: 500px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.node circle {
+    fill: steelblue;
+    stroke: black;
+    stroke-width: 1.5px;
+}
+
+.link {
+    stroke: #999;
+    stroke-opacity: .6;
+}
