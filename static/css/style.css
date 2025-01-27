@@ -10,13 +10,159 @@ body {
     margin-bottom: 20px;
 }
 
+.node rect {
+    fill: steelblue;
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+
 .node circle {
     fill: steelblue;
-    stroke: black;
+    stroke: #fff;
     stroke-width: 1.5px;
+}
+
+.node text {
+    font: 12px sans-serif;
+    pointer-events: none;
 }
 
 .link {
     stroke: #999;
     stroke-opacity: .6;
+    stroke-width: 1px;
+}
+
+.slice-info {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.slice-info h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.slice-info p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.slice-description {
+    font-style: italic;
+    color: #888;
+    margin-top: 10px !important;
+    padding-left: 10px;
+    border-left: 3px solid #ddd;
+}
+
+.slice-controls {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.activate-btn, .deactivate-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.2s;
+}
+
+.activate-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.deactivate-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.activate-btn:hover, .deactivate-btn:hover {
+    opacity: 0.8;
+}
+
+.activate-btn:disabled, .deactivate-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.error-message, .success-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.error-message {
+    background-color: #ffebee;
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
+}
+
+.success-message {
+    background-color: #e8f5e9;
+    color: #4caf50;
+    border: 1px solid #4caf50;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#slices-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 0;
+    list-style: none;
+    justify-content: flex-start;
+}
+
+.slice-item {
+    flex: 0 0 calc(50% - 10px);
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.slice-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    height: 100%;
+}
+
+.message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.message.info {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #1976d2;
+}
+
+.message.error {
+    background-color: #ffebee;
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
 }
