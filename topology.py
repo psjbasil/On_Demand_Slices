@@ -4,6 +4,7 @@ from mininet.node import RemoteController
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
 import json
+from qos_manager import QoSManager
 
 class IndustrialTopo(Topo):
     """
@@ -92,54 +93,8 @@ class IndustrialTopo(Topo):
 
     def configure_qos(self, net):
         """Configure QoS parameters for all hosts"""
-        TOTAL_BANDWIDTH = 10000  # 10 Gbps total bandwidth
-        
-        # Remove existing tc rules
-        for host_name in self.config["hosts"]:
-            host = net.get(host_name)
-            host.cmd('tc qdisc del dev {}-eth0 root'.format(host_name))
-        
-        # Track bandwidth allocations per host
-        host_bandwidths = {}
-        
-        # Calculate maximum bandwidth for each host based on slice configurations
-        for slice_name, slice_info in self.config["slices"].items():
-            slice_bandwidth = TOTAL_BANDWIDTH * slice_info["bandwidth_percentage"] / 100
-            for host_name in slice_info["hosts"]:
-                if host_name not in host_bandwidths:
-                    host_bandwidths[host_name] = slice_bandwidth
-                else:
-                    host_bandwidths[host_name] = max(host_bandwidths[host_name], slice_bandwidth)
-        
-        # Apply QoS configuration to each host
-        for host_name, max_bandwidth in host_bandwidths.items():
-            host = net.get(host_name)
-            
-            # Configure Token Bucket Filter (TBF) for rate limiting
-            latency = "20ms"  # Maximum latency before packets are dropped
-            burst = f"{max_bandwidth/8}kb"  # Burst size (1ms worth of data)
-            
-            host.cmd(f'tc qdisc add dev {host_name}-eth0 root tbf rate {max_bandwidth}mbit '
-                    f'burst {burst} latency {latency}')
-            
-            info(f"Configured QoS for host {host_name} with maximum bandwidth {max_bandwidth}Mbps "
-                 f"(burst: {burst}, latency: {latency})\n")
-            
-            # Display the configuration
-            info(f"TC configuration for {host_name}:\n")
-            info(host.cmd(f'tc qdisc show dev {host_name}-eth0') + "\n")
-
-    def _parse_bandwidth(self, bw_str):
-        """Convert bandwidth string (e.g., '10M', '1G') to Mbps"""
-        value = int(bw_str[:-1])
-        unit = bw_str[-1].upper()
-        if unit == 'G':
-            return value * 1000
-        elif unit == 'M':
-            return value
-        elif unit == 'K':
-            return value / 1000
-        return value
+        qos_manager = QoSManager(total_bandwidth="10G")  # Using string format
+        qos_manager.configure_qos(net, self.config["slices"])
 
 def run_mininet():
     """Initialize and run the Mininet network"""
