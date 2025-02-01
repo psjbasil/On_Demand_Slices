@@ -213,8 +213,8 @@ class SimpleSwitch(app_manager.RyuApp):
                 return
             
             # Get slice priority
-            priority_map = {"high": 50, "medium": 30, "low": 10}
-            priority = priority_map.get(slice_info["priority"], 10)
+            priority_map = {"high": 50000, "medium": 30000, "low": 10000}
+            priority = priority_map.get(slice_info["priority"], 10000)
             
             # Get hosts in this slice
             hosts = slice_info["hosts"]
@@ -269,8 +269,8 @@ class SimpleSwitch(app_manager.RyuApp):
                 topology_data = json.load(f)
             
             slice_info = self.slices[slice_name]
-            priority_map = {"high": 50, "medium": 30, "low": 10}
-            priority = priority_map.get(slice_info["priority"], 10)
+            priority_map = {"high": 50000, "medium": 30000, "low": 10000}
+            priority = priority_map.get(slice_info["priority"], 10000)
             hosts = slice_info["hosts"]
 
             # Remove flows between all hosts in the slice
