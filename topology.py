@@ -114,11 +114,9 @@ def run_mininet():
     try:
         net.start()
         
-        # Configure QoS settings
-        info('*** Configuring QoS ...\n')
-        topo.configure_qos(net)
-        
         # Generate and save topology data for the controller
+        CORE_LINK_CAPACITY = 1000
+        ACCESS_LINK_CAPACITY = 100
         topology_data = {
             "nodes": [
                 {"id": switch_id, "type": "switch", "description": desc}
@@ -127,8 +125,9 @@ def run_mininet():
                 {"id": host_id, "type": "host", "description": info["description"]}
                 for host_id, info in topo.config["hosts"].items()
             ],
-            "links": [{"source": link[0], "target": link[1], "capacity": 1000 if 's1' in link else 100} 
-                     for link in topo.links()],
+            "links": [{"source": link[0], "target": link[1], 
+                      "capacity": CORE_LINK_CAPACITY if 's1' in link else ACCESS_LINK_CAPACITY} 
+                      for link in topo.links()],
             "hosts": {host_id: info["ip"].split('/')[0] for host_id, info in topo.config["hosts"].items()},
             "slices": topo.config["slices"]
         }
@@ -140,7 +139,11 @@ def run_mininet():
             info("*** Topology data saved to /tmp/topology.json\n")
         except Exception as e:
             info(f"*** Error saving topology data: {str(e)}\n")
-
+        
+        # Configure QoS settings
+        info('*** Configuring QoS ...\n')
+        topo.configure_qos(net)
+        
         info('*** Running CLI\n')
         CLI(net)
     finally:
